@@ -1,7 +1,6 @@
 package com.bugzappr.mbtimatchr.controller;
 
 
-import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
@@ -20,6 +19,11 @@ public class SessionController {
   private final ConcurrentLinkedDeque<QueuePlayer> queue = new ConcurrentLinkedDeque<QueuePlayer>();
   private final ExecutorService matchers = Executors.newFixedThreadPool(6);
 
+  private static final String SERVER_HOST = "127.0.0.1";
+  private static final Integer SERVER_PORT = 8080;
+
+  private Integer current_gameroom_index = 0;
+
   @PostMapping("/join")
   public DeferredResult<QueueResponse> join(@RequestParam String mbti) {
     DeferredResult<QueueResponse> output = new DeferredResult<>(10000L);
@@ -27,7 +31,7 @@ public class SessionController {
     output.onTimeout(() -> {
       synchronized (player) {
         player.notify();
-        output.setResult(new QueueResponse(player.getUuid(), null, null, "127.0.0.1", 8080, 0));
+        output.setResult(new QueueResponse(player.getUuid(), null, null, null, 0, 0));
       }
     });
     matchers.execute(() -> {
@@ -39,17 +43,17 @@ public class SessionController {
             queue.remove(player);
             if (player.getMatch() != null) {
               output.setResult(new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
-                  player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
+                  player.getMatch().getUuid(), SERVER_HOST, SERVER_PORT, current_gameroom_index));
             }
           } catch (Exception e) {
-            System.out.println("1 " + e.getMessage());
+            System.out.println("1 " + e);
             output.setErrorResult(e.getMessage());
           }
         } else {
           try {
             boolean found = false;
             for (QueuePlayer p : queue) {
-              if (((ArrayList<String>) MBTIMapping.mapping.get(mbti)).contains(p.getMbti())) {
+              if (MBTIMapping.mapping.get(mbti).contains(p.getMbti())) {
                 found = true;
                 p.setMatch(player);
                 player.setMatch(p);
@@ -58,7 +62,7 @@ public class SessionController {
                 }
                 queue.remove(player);
                 output.setResult(new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
-                    player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
+                    player.getMatch().getUuid(), SERVER_HOST, SERVER_PORT, current_gameroom_index));
               }
             }
             if (!found) {
@@ -67,7 +71,7 @@ public class SessionController {
               queue.remove(player);
               if (player.getMatch() != null) {
                 output.setResult(new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
-                    player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
+                    player.getMatch().getUuid(), SERVER_HOST, SERVER_PORT, current_gameroom_index));
               }
             }
           } catch (Exception e) {

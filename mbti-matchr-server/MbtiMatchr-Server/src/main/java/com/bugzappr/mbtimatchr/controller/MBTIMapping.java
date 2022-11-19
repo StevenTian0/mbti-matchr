@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MBTIMapping {
-  public static final Map mapping = new HashMap<String, List<String>>();
+  public static final Map<String, List<String>> mapping = new HashMap<String, List<String>>();
 
   static{
     mapping.put("INFP", new ArrayList<String>(Arrays.asList("INFP", "ENFP", "INFJ", "ENFJ", "INTJ", "ENTJ", "INTP", "ENTP")));
