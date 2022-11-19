@@ -22,7 +22,7 @@ public class PlayerLife : MonoBehaviour
         {
             Debug.Log("trap!");
             Die();
-           }
+        }
     }
 
         private void OnCollisionEnter2D(Collision2D collision)

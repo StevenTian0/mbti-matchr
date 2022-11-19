@@ -2,21 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SmallPlayerController : MonoBehaviour
+public class BigPlayerController : MonoBehaviour
 {
-    // Start is called before the first frame update
     private Rigidbody2D rb;
     private BoxCollider2D coll;
     private SpriteRenderer sprite;
     private Animator anim;
+    public double positionX;
+    public double positionY;
+    public double positionZ;
+
 
     [SerializeField] private LayerMask jumpableGround;
 
     private float dirX = 0f;
-    [SerializeField] private float moveSpeed = 7f;
-    [SerializeField] private float jumpForce = 8f;
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float jumpForce = 4f;
 
-    private enum MovementState { idle, running, jumping, falling }
+    public enum MovementState { idle, running, jumping, falling }
+    public MovementState state;
 
     [SerializeField] private AudioSource jumpSoundEffect;
 
@@ -27,16 +31,24 @@ public class SmallPlayerController : MonoBehaviour
         coll = GetComponent<BoxCollider2D>();
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+
+        if (this.tag == "Player 1") jumpableGround = LayerMask.GetMask("Structure", "Player 2");
+        else jumpableGround = LayerMask.GetMask("Structure", "Player 1");
     }
 
     // Update is called once per frame
     private void Update()
     {
+        positionX = transform.position.x;
+        positionY = transform.position.y;
+        positionZ = transform.position.z;
+
         dirX = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
+            //jumpSoundEffect.Play();
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
 
@@ -45,8 +57,6 @@ public class SmallPlayerController : MonoBehaviour
 
     private void UpdateAnimationState()
     {
-        MovementState state;
-
         if (dirX > 0f)
         {
             state = MovementState.running;

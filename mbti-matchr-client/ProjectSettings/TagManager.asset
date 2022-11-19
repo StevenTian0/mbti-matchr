@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Trap
   - Structure
+  - Player 1
+  - Player 2
   layers:
   - Default
   - TransparentFX
@@ -13,8 +15,8 @@ TagManager:
   - Structure
   - Water
   - UI
-  - Player
-  - 
+  - ' Player 1'
+  - Player 2
   - 
   - 
   - 
