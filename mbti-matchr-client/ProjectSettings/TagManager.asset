@@ -3,15 +3,17 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Trap
+  - Structure
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Structure
   - Water
   - UI
-  - 
+  - Player
   - 
   - 
   - 
