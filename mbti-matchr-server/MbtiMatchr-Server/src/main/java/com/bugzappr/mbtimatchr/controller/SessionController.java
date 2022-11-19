@@ -18,14 +18,14 @@ import org.springframework.web.context.request.async.DeferredResult;
 @RequestMapping("/api")
 public class SessionController {
   private List<QueuePlayer> queue = new ArrayList<QueuePlayer>();
-  private ExecutorService bakers = Executors.newFixedThreadPool(5);
+  private ExecutorService matchers = Executors.newFixedThreadPool(6);
 
   @GetMapping("/join")
   public DeferredResult<QueueResponse> join(@RequestParam String mbti) {
     DeferredResult<QueueResponse> output = new DeferredResult<>(20000L);
-    output.onTimeout(() -> {queue.remove(mbti); output.setErrorResult("please try later");});
     QueuePlayer player = new QueuePlayer(mbti, UUID.randomUUID());
-    bakers.execute(() -> {
+    output.onTimeout(() -> {queue.remove(player); output.setErrorResult("please try later");});
+    matchers.execute(() -> {
       synchronized (player) {
         if (queue.isEmpty()) {
           try {
@@ -35,7 +35,7 @@ public class SessionController {
             output.setResult(
                 new QueueResponse(player.getUuid(), player.getMatch().getMbti(), player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
           } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("1 " + e.getMessage());
             output.setErrorResult(e.getMessage());
           }
         } else {
@@ -62,7 +62,7 @@ public class SessionController {
                   new QueueResponse(player.getUuid(), player.getMatch().getMbti(), player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
             }
           } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("2" + e);
             output.setErrorResult(e.getMessage());
           }
         }
