@@ -31,29 +31,35 @@ public class SessionController {
           try {
             queue.add(player);
             player.wait();
-            for(Player p : queue) {
-              if (((ArrayList<String>) MBTIMapping.mapping.get("name")).contains(p.getName())) ;
-              queue.remove(p);
-              output.setResult(
-                  format("Paired with %s. Enjoy!", p.getName()));
-            }
-            player.wait();
+            queue.remove(player);
+            output.setResult(
+                format("Paired with %s. Enjoy!", player.getMatch().getName()));
           } catch (Exception e) {
             System.out.println(e.getMessage());
             output.setErrorResult(e.getMessage());
           }
         } else {
           try {
+            boolean found = false;
             for(Player p : queue) {
-              if (((ArrayList<String>) MBTIMapping.mapping.get("name")).contains(p.getName())) ;
-              queue.remove(p);
-              output.setResult(
-                  format("Paired with %s. Enjoy!", p.getName()));
+              if (((ArrayList<String>) MBTIMapping.mapping.get(name)).contains(p.getName())) {
+                found = true;
+                p.setMatch(player);
+                synchronized (p) {
+                  p.notify();
+                }
+                queue.remove(player);
+                output.setResult(
+                    format("Paired with %s. Enjoy!", p.getName()));
+              }
             }
-            output.setResult(
-                format("Paired with %s. Enjoy!", queue.poll()));
-            queue.add(name);
-            monitor.notify();
+            if(!found) {
+              queue.add(player);
+              player.wait();
+              queue.remove(player);
+              output.setResult(
+                  format("Paired with %s. Enjoy!", player.getMatch().getName()));
+            }
           } catch (Exception e) {
             System.out.println(e.getMessage());
             output.setErrorResult(e.getMessage());
