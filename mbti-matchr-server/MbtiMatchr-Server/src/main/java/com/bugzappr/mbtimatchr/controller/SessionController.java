@@ -1,30 +1,30 @@
 package com.bugzappr.mbtimatchr.controller;
 
-import static java.lang.String.format;
 
-import java.util.ArrayDeque;
+import com.bugzappr.mbtimatchr.dto.QueueResponse;
+import com.bugzappr.mbtimatchr.model.QueuePlayer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
 @RestController
 @RequestMapping("/api")
 public class SessionController {
-  private List<Player> queue = new ArrayList<Player>();
+  private List<QueuePlayer> queue = new ArrayList<QueuePlayer>();
   private ExecutorService bakers = Executors.newFixedThreadPool(5);
 
-  @GetMapping("/join/{name}")
-  public DeferredResult<String> join(@PathVariable String name) {
-    DeferredResult<String> output = new DeferredResult<>(20000L);
-    output.onTimeout(() -> {queue.remove(name);output.setErrorResult("please try later");});
-    Player player = new Player(name);
+  @GetMapping("/join")
+  public DeferredResult<QueueResponse> join(@RequestParam String mbti) {
+    DeferredResult<QueueResponse> output = new DeferredResult<>(20000L);
+    output.onTimeout(() -> {queue.remove(mbti); output.setErrorResult("please try later");});
+    QueuePlayer player = new QueuePlayer(mbti, UUID.randomUUID());
     bakers.execute(() -> {
       synchronized (player) {
         if (queue.isEmpty()) {
@@ -33,7 +33,7 @@ public class SessionController {
             player.wait();
             queue.remove(player);
             output.setResult(
-                format("Paired with %s. Enjoy!", player.getMatch().getName()));
+                new QueueResponse(player.getUuid(), player.getMatch().getMbti(), player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
           } catch (Exception e) {
             System.out.println(e.getMessage());
             output.setErrorResult(e.getMessage());
@@ -41,16 +41,17 @@ public class SessionController {
         } else {
           try {
             boolean found = false;
-            for(Player p : queue) {
-              if (((ArrayList<String>) MBTIMapping.mapping.get(name)).contains(p.getName())) {
+            for(QueuePlayer p : queue) {
+              if (((ArrayList<String>) MBTIMapping.mapping.get(mbti)).contains(p.getMbti())) {
                 found = true;
                 p.setMatch(player);
+                player.setMatch(p);
                 synchronized (p) {
                   p.notify();
                 }
                 queue.remove(player);
                 output.setResult(
-                    format("Paired with %s. Enjoy!", p.getName()));
+                    new QueueResponse(player.getUuid(), player.getMatch().getMbti(), player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
               }
             }
             if(!found) {
@@ -58,7 +59,7 @@ public class SessionController {
               player.wait();
               queue.remove(player);
               output.setResult(
-                  format("Paired with %s. Enjoy!", player.getMatch().getName()));
+                  new QueueResponse(player.getUuid(), player.getMatch().getMbti(), player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
             }
           } catch (Exception e) {
             System.out.println(e.getMessage());
