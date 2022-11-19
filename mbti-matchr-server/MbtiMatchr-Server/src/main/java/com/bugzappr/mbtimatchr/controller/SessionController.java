@@ -1,8 +1,6 @@
 package com.bugzappr.mbtimatchr.controller;
 
 
-import com.bugzappr.mbtimatchr.dto.QueueResponse;
-import com.bugzappr.mbtimatchr.model.QueuePlayer;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -13,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
+import com.bugzappr.mbtimatchr.dto.QueueResponse;
+import com.bugzappr.mbtimatchr.model.QueuePlayer;
 
 @RestController
 @RequestMapping("/api")
@@ -27,9 +27,7 @@ public class SessionController {
     output.onTimeout(() -> {
       synchronized (player) {
         player.notify();
-        output.setResult(
-            new QueueResponse(player.getUuid(), null,
-                null, "127.0.0.1", 8080, 0));
+        output.setResult(new QueueResponse(player.getUuid(), null, null, "127.0.0.1", 8080, 0));
       }
     });
     matchers.execute(() -> {
@@ -40,9 +38,8 @@ public class SessionController {
             player.wait();
             queue.remove(player);
             if (player.getMatch() != null) {
-              output.setResult(
-                  new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
-                      player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
+              output.setResult(new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
+                  player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
             }
           } catch (Exception e) {
             System.out.println("1 " + e.getMessage());
@@ -60,9 +57,8 @@ public class SessionController {
                   p.notify();
                 }
                 queue.remove(player);
-                output.setResult(
-                    new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
-                        player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
+                output.setResult(new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
+                    player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
               }
             }
             if (!found) {
@@ -70,9 +66,8 @@ public class SessionController {
               player.wait();
               queue.remove(player);
               if (player.getMatch() != null) {
-                output.setResult(
-                    new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
-                        player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
+                output.setResult(new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
+                    player.getMatch().getUuid(), "127.0.0.1", 8080, 0));
               }
             }
           } catch (Exception e) {
