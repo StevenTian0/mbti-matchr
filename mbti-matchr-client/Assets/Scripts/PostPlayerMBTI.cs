@@ -27,7 +27,7 @@ public class PostPlayerMBTI : MonoBehaviour
 
     public async void OnMatchClick()
     {
-        /*
+        
         m_Text = dropdown.captionText.GetParsedText();
         SceneManager.LoadScene("WaitingRoom");
         try {
@@ -49,7 +49,7 @@ public class PostPlayerMBTI : MonoBehaviour
             return;
         }
         Debug.Log("In 5 seconds, start level 1...");
-        StartCoroutine(GameStart());*/
+        StartCoroutine(GameStart());
         SceneManager.LoadScene("Level1");
     }
 
