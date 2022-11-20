@@ -2,22 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BigPlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
     private BoxCollider2D coll;
     private SpriteRenderer sprite;
     private Animator anim;
-    public double positionX;
-    public double positionY;
-    public double positionZ;
+    public float positionX;
+    public float positionY;
+    public float positionZ;
 
 
     [SerializeField] private LayerMask jumpableGround;
 
     private float dirX = 0f;
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float jumpForce = 4f;
+    [SerializeField] private float jumpForce = 17f;
 
     public enum MovementState { idle, running, jumping, falling }
     public MovementState state;
@@ -32,8 +32,8 @@ public class BigPlayerController : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
-        if (this.tag == "Player 1") jumpableGround = LayerMask.GetMask("Structure", "Player 2");
-        else jumpableGround = LayerMask.GetMask("Structure", "Player 1");
+        if (this.tag == "Moose") jumpableGround = LayerMask.GetMask("Structure", "Racoon");
+        else jumpableGround = LayerMask.GetMask("Structure", "Moose");
     }
 
     // Update is called once per frame
@@ -82,6 +82,24 @@ public class BigPlayerController : MonoBehaviour
         }
 
         anim.SetInteger("States", (int)state);
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.tag == "Moose" || other.gameObject.tag == "Racoon") {
+            if (transform.position.y > other.gameObject.transform.position.y) {
+                Debug.Log("On top of Player!");
+                transform.position += new Vector3(0f,0f,1f);
+            }
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D other) {
+        if (other.gameObject.tag == "Moose" || other.gameObject.tag == "Racoon") {
+            if (transform.position.y >  other.gameObject.transform.position.y) {
+                Debug.Log("No longer on top of Player!");
+                transform.position -= new Vector3(0f,0f,1f);
+            }
+        }
     }
 
     private bool IsGrounded()

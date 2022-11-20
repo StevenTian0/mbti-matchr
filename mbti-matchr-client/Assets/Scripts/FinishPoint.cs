@@ -12,7 +12,7 @@ public class FinishPoint : MonoBehaviour
     // }
 
        void OnTriggerEnter2D(Collider2D other){  // The player enters a trigger collider (trap or spikes)
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Moose" || other.gameObject.tag == "Racoon")
         {
             Debug.Log("Finish line!");
         }

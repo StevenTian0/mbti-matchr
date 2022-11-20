@@ -7,12 +7,12 @@ using UnityEngine;
 
 public class PlayerActionDto
 {
-    public double positionX;
-    public double positionY;
-    public double positionZ;
+    public float positionX;
+    public float positionY;
+    public float positionZ;
     public int state;
 
-    public PlayerActionDto(double positionX, double positionY, double positionZ, int state)
+    public PlayerActionDto(float positionX, float positionY, float positionZ, int state)
     {
         this.positionX = positionX;
         this.positionY = positionY;
@@ -27,7 +27,10 @@ public class PlayerActionDto
 
     public string SaveToString()
     {
-        return JsonUtility.ToJson(this);
+        string temp = JsonUtility.ToJson(this);
+        temp.Replace("{", "%7B");
+        temp.Replace("}", "%7D");
+        return temp;
     }
 
 }

@@ -8,6 +8,8 @@ TagManager:
   - Structure
   - Player 1
   - Player 2
+  - Moose
+  - Racoon
   layers:
   - Default
   - TransparentFX
@@ -15,8 +17,8 @@ TagManager:
   - Structure
   - Water
   - UI
-  - ' Player 1'
-  - Player 2
+  - Moose
+  - Racoon
   - 
   - 
   - 
