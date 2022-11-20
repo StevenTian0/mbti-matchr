@@ -12,7 +12,6 @@ using System.Net.Sockets;
 
 public class PostPlayerMBTI : MonoBehaviour
 {
-    public GameObject animation;
     public TMP_InputField inputField;
     private string m_Text;
     public QueueResponseDto res;
@@ -22,8 +21,7 @@ public class PostPlayerMBTI : MonoBehaviour
     private string port = "8080";
     private List<string> valdiInput = new List<string>()
     {
-       "INTJ", "INTP", "ENTJ", "ENTP","INFJ", "INFP", "ENFJ", "ENFP","ISTJ", "ISFJ", "ESTJ", "ESFJ","ISTP", "ISFP", "ESTP", "ESFP",
-       "intj","intp","entj","entp","infj","infp","enfj", "enfp","istj","isfj","estj","esfj","istp","isfp","estp","esfp"
+       "INTJ", "INTP", "ENTJ", "ENTP","INFJ", "INFP", "ENFJ", "ENFP","ISTJ", "ISFJ", "ESTJ", "ESFJ","ISTP", "ISFP", "ESTP", "ESFP"
     };
     private static readonly HttpClient client = new HttpClient();
 
@@ -56,6 +54,7 @@ public class PostPlayerMBTI : MonoBehaviour
             responseData = System.Text.Encoding.UTF8.GetString(buf, 0, bytes);
             string[] response = responseData.Split(',');
             gsPid = response[0];
+            pid =  gsPid;
             isReady = int.Parse(response[1]);
         }
     }
@@ -80,9 +79,8 @@ public class PostPlayerMBTI : MonoBehaviour
 
     public void Awake()
     {
-        Instantiate(animation, new Vector3(0, 0, 0), Quaternion.identity);
         DontDestroyOnLoad(this.gameObject);
-        DontDestroyOnLoad(GameObject.Find("Animation(Clone)"));
+        DontDestroyOnLoad(GameObject.Find("Animation"));
     }
 
     public async void OnMatchClick()
@@ -125,7 +123,6 @@ public class PostPlayerMBTI : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(3f);
         Debug.Log("Starting level 1");
-        Destroy(GameObject.Find("Animation(Clone)"));
         SceneManager.LoadScene("Level1");
     }
     private async Task<string> SendJoinRequest()

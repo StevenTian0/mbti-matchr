@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 7943996421765331375}
   - component: {fileID: 7943996421765331374}
   - component: {fileID: 7943996421765331347}
-  - component: {fileID: 2298479272653543130}
   m_Layer: 6
   m_Name: Moose
   m_TagString: Moose
@@ -155,25 +154,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2298479272653543130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7943996421765331369}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77d80fab4938efd4b84b1d2c1ef96156, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  positionX: 0
-  positionY: 0
-  positionZ: 0
-  jumpableGround:
-    serializedVersion: 2
-    m_Bits: 0
-  moveSpeed: 5
-  jumpForce: 17
-  state: 0
-  jumpSoundEffect: {fileID: 0}
