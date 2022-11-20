@@ -29,7 +29,7 @@ public class PlayersController : MonoBehaviour
     private SpriteRenderer othersprite;
     private Animator thisAnim;
     private Animator otherAnim;
-    private int won = 0;
+    public int won = 0;
     public float thispositionX;
     public float otherpositionX;
     public float thispositionY;
@@ -112,33 +112,29 @@ public class PlayersController : MonoBehaviour
 
     public void Update()
     {
-        if (won == 0){
-            if (finishPoint.arrived == 2) {
-                won = 1;
-                Win();
+        if (finishPoint.arrived == 2) won = 1;
+        if (won != 1) 
+        {
+            if (Input.GetButtonDown("Fire1"))
+            {
+                Debug.Log("ctrl is pressed");
+                GSUpdate(1);
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
-            else {
-                if (Input.GetButtonDown("Fire1"))
-                {
-                    Debug.Log("ctrl is pressed");
-                    GSUpdate(1);
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                }
 
-                thisdirX = Input.GetAxisRaw("Horizontal");
-                thisrb.velocity = new Vector2(thisdirX * moveSpeed, thisrb.velocity.y);
+            thisdirX = Input.GetAxisRaw("Horizontal");
+            thisrb.velocity = new Vector2(thisdirX * moveSpeed, thisrb.velocity.y);
 
-                if (Input.GetButtonDown("Jump") && IsGrounded())
-                {
-                    thisrb.velocity = new Vector2(thisrb.velocity.x, jumpForce);
-                }
-                GSUpdate(0);
-                UpdatethisAnimationState();
-                UpdateOtherAnimationState();
+            if (Input.GetButtonDown("Jump") && IsGrounded())
+            {
+                thisrb.velocity = new Vector2(thisrb.velocity.x, jumpForce);
             }
+
+            GSUpdate(0);
+            UpdatethisAnimationState();
+            UpdateOtherAnimationState();
         }
     }
-
     private void GSUpdate(int reset)
     {
         PlayerActionDto playerActionDto;
@@ -150,7 +146,8 @@ public class PlayersController : MonoBehaviour
                 thisInitY,
                 thisInitZ,
                 0,
-                reset
+                reset,
+                won
             );
         }
         else
@@ -161,7 +158,8 @@ public class PlayersController : MonoBehaviour
                 thisPlayer.transform.position.y,
                 thisPlayer.transform.position.z,
                 (int)thisState,
-                reset
+                reset,
+                won
             );
         }
 
@@ -196,6 +194,11 @@ public class PlayersController : MonoBehaviour
         {
             Debug.Log("ctrl is pressed");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        if(playerActionDtoReponse.won == 1)
+        {
+            if (!winScreen.activeSelf) winScreen.SetActive(true);
         }
     }
 
@@ -282,9 +285,5 @@ public class PlayersController : MonoBehaviour
     private bool IsGrounded()
     {
         return Physics2D.BoxCast(thiscoll.bounds.center, thiscoll.bounds.size, 0f, Vector2.down, .1f, jumpableGround);
-    }
-
-    private void Win() {
-        winScreen.SetActive(true);
     }
 }
