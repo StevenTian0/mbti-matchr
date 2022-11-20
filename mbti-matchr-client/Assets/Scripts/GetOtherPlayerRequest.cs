@@ -38,7 +38,9 @@ public class GetOtherPlayerRequest : MonoBehaviour
 
     public async void FixedUpdate()
     {
+        Debug.Log("Updating .....");
         string playerActionJsonResponse = await SendPlayerActionRequest();
+        Debug.Log("Receiving.....");
         playerActionDtoReponse = PlayerActionDto.CreateFromJSON(playerActionJsonResponse);
         Debug.Log(playerActionDtoReponse.positionX); 
         Debug.Log(playerActionDtoReponse.positionY);
