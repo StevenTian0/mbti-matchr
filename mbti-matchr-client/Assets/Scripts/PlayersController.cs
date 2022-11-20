@@ -86,7 +86,7 @@ public class PlayersController : MonoBehaviour
         othersprite = otherPlayer.GetComponent<SpriteRenderer>();
         otherAnim = otherPlayer.GetComponent<Animator>();
 
-        if (this.tag == "Moose") jumpableGround = LayerMask.GetMask("Structure", "Racoon");
+        if (thisPlayer.tag == "Moose") jumpableGround = LayerMask.GetMask("Structure", "Racoon");
         else jumpableGround = LayerMask.GetMask("Structure", "Moose");
     }
 
