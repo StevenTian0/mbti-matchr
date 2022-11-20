@@ -11,13 +11,15 @@ public class PlayerActionDto
     public float positionY;
     public float positionZ;
     public int state;
+    public int reset;
 
-    public PlayerActionDto(float positionX, float positionY, float positionZ, int state)
+    public PlayerActionDto(float positionX, float positionY, float positionZ, int state, int reset)
     {
         this.positionX = positionX;
         this.positionY = positionY;
         this.positionZ = positionZ;
         this.state = state;
+        this.reset = reset;
     }
 
     public static PlayerActionDto CreateFromJSON(string jsonString)

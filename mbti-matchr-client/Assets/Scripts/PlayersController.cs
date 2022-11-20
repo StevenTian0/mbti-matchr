@@ -40,7 +40,7 @@ public class PlayersController : MonoBehaviour
     private float otherdirX = 0f;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 17f;
-    bool GameIsStarted = false;
+    int reset = 0;
 
     /// <summary>
     /// //////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ public class PlayersController : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            Debug.Log("q is pressed");
+            Debug.Log("ctrl is pressed");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         
@@ -118,6 +118,12 @@ public class PlayersController : MonoBehaviour
         playerActionDtoReponse = PlayerActionDto.CreateFromJSON(playerActionJsonResponse);
         //Debug.Log(playerActionDtoReponse.positionX);
         //Debug.Log(playerActionDtoReponse.positionY);
+
+        if(playerActionDtoReponse.reset == 1)
+        {
+            Debug.Log("ctrl is pressed");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
 
         otherPlayer.transform.position = new Vector3(playerActionDtoReponse.positionX, playerActionDtoReponse.positionY,
             playerActionDtoReponse.positionZ);
@@ -217,7 +223,8 @@ public class PlayersController : MonoBehaviour
             thisPlayer.transform.position.x,
             thisPlayer.transform.position.y,
             thisPlayer.transform.position.z,
-            (int)thisState
+            (int)thisState,
+            reset
         );
 
         string playerActionDtoJson = playerActionDto.SaveToString();
