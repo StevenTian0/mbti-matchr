@@ -97,6 +97,10 @@ public class PostPlayerMBTI : MonoBehaviour
             UnityEngine.Debug.Log("Sending Join Request");
             string response = await SendJoinRequest();
             res = QueueResponseDto.CreateFromJSON(response);
+            if (res.matched_uuid == null) {
+                SceneManager.LoadScene("Menu");
+                return;
+            }
             UnityEngine.Debug.Log("Room id: " + res.gameroom_index);
             // set gsHost and gsPort
             gsHost = res.server_host;
@@ -109,6 +113,7 @@ public class PostPlayerMBTI : MonoBehaviour
 
         UnityEngine.Debug.Log("Sending Ready Request");
         GSReady();
+
 
         if (pid.Equals("-1"))
         {
