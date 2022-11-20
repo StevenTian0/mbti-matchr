@@ -36,7 +36,6 @@ public class PostPlayerMBTI : MonoBehaviour
         int isReady = 0;
         while (isReady == 0)
         {
-            StartCoroutine(ExecuteAfterTime(0.1f));
             byte[] buf = System.Text.Encoding.UTF8.GetBytes(BZREADY + gsPid);
 
             GSConnect();
@@ -55,20 +54,15 @@ public class PostPlayerMBTI : MonoBehaviour
         }
     }
 
-    IEnumerator ExecuteAfterTime(float time)
-    {
-        yield return new WaitForSeconds(time);
-    }
-
     // Connect to TCP gameserver
     public static bool GSConnect()
     {
         bool res = false;
-        UnityEngine.Debug.Log($"Trying to connect to gameserver {gsHost}:{gsPort}");
+        //UnityEngine.Debug.Log($"Trying to connect to gameserver {gsHost}:{gsPort}");
         try
         {
             gsClient = new TcpClient(gsHost, gsPort);
-            UnityEngine.Debug.Log("Gameserver connection success");
+            //UnityEngine.Debug.Log("Gameserver connection success");
             res = true;
         }
         catch (SocketException e)
@@ -130,18 +124,6 @@ public class PostPlayerMBTI : MonoBehaviour
         };
         var content = new FormUrlEncodedContent(values);
         var response = await client.PostAsync(System.String.Format("http://{0}:{1}/api/join", host, port), content);
-        var responseString = await response.Content.ReadAsStringAsync();
-        return responseString;
-    }
-
-    private async Task<string> SendReadyRequest()
-    {
-        var values = new Dictionary<string, string>
-        {
-            {"roomId", res.gameroom_index.ToString() }
-        };
-        var content = new FormUrlEncodedContent(values);
-        var response = await client.PostAsync(System.String.Format("http://{0}:{1}/game/ready", res.server_host.ToString(), res.server_port.ToString()), content);
         var responseString = await response.Content.ReadAsStringAsync();
         return responseString;
     }

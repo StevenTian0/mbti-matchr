@@ -43,6 +43,10 @@ public class PlayersController : MonoBehaviour
     [SerializeField] private float jumpForce = 17f;
     int reset = 0;
 
+    public float thisInitX;
+    public float thisInitY;
+    public float thisInitZ;
+
     /// <summary>
     /// //////////////////////////////////////////////////////////////////////////
     /// </summary>
@@ -89,6 +93,10 @@ public class PlayersController : MonoBehaviour
 
         if (thisPlayer.tag == "Moose") jumpableGround = LayerMask.GetMask("Structure", "Racoon");
         else jumpableGround = LayerMask.GetMask("Structure", "Moose");
+
+        thisInitX = thisPlayer.transform.position.x;
+        thisInitY = thisPlayer.transform.position.y;
+        thisInitZ = thisPlayer.transform.position.z;
     }
 
     public void Update()
@@ -96,6 +104,7 @@ public class PlayersController : MonoBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
             Debug.Log("ctrl is pressed");
+            GSUpdate(1);
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         
@@ -106,21 +115,37 @@ public class PlayersController : MonoBehaviour
         {
             thisrb.velocity = new Vector2(thisrb.velocity.x, jumpForce);
         }
-        GSUpdate();
+        GSUpdate(0);
         UpdatethisAnimationState();
         UpdateOtherAnimationState();                     
     }
 
-    private void GSUpdate()
+    private void GSUpdate(int reset)
     {
-        PlayerActionDto playerActionDto = new PlayerActionDto
-        (
-            thisPlayer.transform.position.x,
-            thisPlayer.transform.position.y,
-            thisPlayer.transform.position.z,
-            (int)thisState,
-            reset
-        );
+        PlayerActionDto playerActionDto;
+        if (reset == 1)
+        {
+            playerActionDto = new PlayerActionDto
+            (
+                thisInitX,
+                thisInitY,
+                thisInitZ,
+                0,
+                reset
+            );
+        }
+        else
+        {
+            playerActionDto = new PlayerActionDto
+            (
+                thisPlayer.transform.position.x,
+                thisPlayer.transform.position.y,
+                thisPlayer.transform.position.z,
+                (int)thisState,
+                reset
+            );
+        }
+        
         string playerActionDtoJson = playerActionDto.SaveToString();
         byte[] buf = System.Text.Encoding.UTF8.GetBytes(PostPlayerMBTI.BZUPDATE + PostPlayerMBTI.gsPid + playerActionDtoJson);
 
@@ -135,40 +160,24 @@ public class PlayersController : MonoBehaviour
 
         responseData = System.Text.Encoding.UTF8.GetString(buf, 0, bytes);
 
-        // TODO: take care of responseData = "{}"
+        // take care of responseData = "{}"
+        if (responseData.Equals("{}"))
+        {
+            return;
+        }
+
         playerActionDtoReponse = PlayerActionDto.CreateFromJSON(responseData);
+
+        otherPlayer.transform.position = new Vector3(playerActionDtoReponse.positionX, playerActionDtoReponse.positionY, 
+            playerActionDtoReponse.positionZ);
+
+        otherState = (MovementState)playerActionDtoReponse.state;
 
         if (playerActionDtoReponse.reset == 1)
         {
             Debug.Log("ctrl is pressed");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
-
-        otherPlayer.transform.position = new Vector3(playerActionDtoReponse.positionX, playerActionDtoReponse.positionY,
-            playerActionDtoReponse.positionZ);
-
-        otherState = (MovementState)playerActionDtoReponse.state;
-    }
-
-    private async void getOtherPlayerMovementInfo()
-    {
-        //Debug.Log("Updating .....");
-        string playerActionJsonResponse = await SendPlayerActionRequest();
-        //Debug.Log("Receiving.....");
-        playerActionDtoReponse = PlayerActionDto.CreateFromJSON(playerActionJsonResponse);
-        //Debug.Log(playerActionDtoReponse.positionX);
-        //Debug.Log(playerActionDtoReponse.positionY);
-
-        if(playerActionDtoReponse.reset == 1)
-        {
-            Debug.Log("ctrl is pressed");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-
-        otherPlayer.transform.position = new Vector3(playerActionDtoReponse.positionX, playerActionDtoReponse.positionY,
-            playerActionDtoReponse.positionZ);
-
-        otherState = (MovementState)playerActionDtoReponse.state;
     }
 
     private void UpdatethisAnimationState()
@@ -254,32 +263,6 @@ public class PlayersController : MonoBehaviour
     private bool IsGrounded()
     {
         return Physics2D.BoxCast(thiscoll.bounds.center, thiscoll.bounds.size, 0f, Vector2.down, .1f, jumpableGround);
-    }
-
-    private async Task<string> SendPlayerActionRequest()
-    {
-        PlayerActionDto playerActionDto = new PlayerActionDto
-        (
-            thisPlayer.transform.position.x,
-            thisPlayer.transform.position.y,
-            thisPlayer.transform.position.z,
-            (int)thisState,
-            reset
-        );
-
-        string playerActionDtoJson = playerActionDto.SaveToString();
-
-        var values = new Dictionary<string, string>
-        {
-            {"roomId", postPlayerMBTI.res.gameroom_index.ToString()},
-            {"pid", postPlayerMBTI.pid},
-            {"data", playerActionDtoJson}
-        };
-
-        var content = new FormUrlEncodedContent(values);
-        var response = await client.PostAsync(System.String.Format("http://{0}:{1}/game/update", postPlayerMBTI.res.server_host, postPlayerMBTI.res.server_port), content);
-        var responseString = await response.Content.ReadAsStringAsync();
-        return responseString;
     }
     
 }
