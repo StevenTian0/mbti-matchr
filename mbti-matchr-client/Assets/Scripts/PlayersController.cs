@@ -57,8 +57,8 @@ public class PlayersController : MonoBehaviour
         dataTransferListener = GameObject.Find("Data Transfer Listener");
         postPlayerMBTI = dataTransferListener.GetComponent<PostPlayerMBTI>();
 
-        Debug.Log("Room id: " + postPlayerMBTI.res.gameroom_index);
-        Debug.Log("Local pid: " + postPlayerMBTI.pid);
+        //Debug.Log("Room id: " + postPlayerMBTI.res.gameroom_index);
+        //Debug.Log("Local pid: " + postPlayerMBTI.pid);
 
         if (postPlayerMBTI.pid.Equals("1"))
         {
@@ -70,7 +70,7 @@ public class PlayersController : MonoBehaviour
             thisPlayer = GameObject.FindGameObjectWithTag("Racoon");
             otherPlayer = GameObject.FindGameObjectWithTag("Moose");
         }
-        Debug.Log("Deactivating the other player's controller...");
+        //Debug.Log("Deactivating the other player's controller...");
 
     }
 
@@ -92,7 +92,7 @@ public class PlayersController : MonoBehaviour
 
     public void Update()
     {
-        Debug.Log("Updating ...... ");
+        //Debug.Log("Updating ...... ");
         thisdirX = Input.GetAxisRaw("Horizontal");
         thisrb.velocity = new Vector2(thisdirX * moveSpeed, thisrb.velocity.y);
 
@@ -107,12 +107,12 @@ public class PlayersController : MonoBehaviour
 
     private async void getOtherPlayerMovementInfo()
     {
-        Debug.Log("Updating .....");
+        //Debug.Log("Updating .....");
         string playerActionJsonResponse = await SendPlayerActionRequest();
-        Debug.Log("Receiving.....");
+        //Debug.Log("Receiving.....");
         playerActionDtoReponse = PlayerActionDto.CreateFromJSON(playerActionJsonResponse);
-        Debug.Log(playerActionDtoReponse.positionX);
-        Debug.Log(playerActionDtoReponse.positionY);
+        //Debug.Log(playerActionDtoReponse.positionX);
+        //Debug.Log(playerActionDtoReponse.positionY);
 
         otherPlayer.transform.position = new Vector3(playerActionDtoReponse.positionX, playerActionDtoReponse.positionY,
             playerActionDtoReponse.positionZ);
