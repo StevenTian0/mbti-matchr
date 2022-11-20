@@ -11,6 +11,7 @@ using TMPro;
 
 public class PostPlayerMBTI : MonoBehaviour
 {
+    public GameObject animation;
     public TMP_InputField inputField;
     private string m_Text;
     public QueueResponseDto res;
@@ -27,7 +28,9 @@ public class PostPlayerMBTI : MonoBehaviour
 
     public void Awake()
     {
+        Instantiate(animation, new Vector3(0, 0, 0), Quaternion.identity);
         DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(GameObject.Find("Animation(Clone)"));
     }
 
     public async void OnMatchClick()
@@ -59,13 +62,13 @@ public class PostPlayerMBTI : MonoBehaviour
         }
         Debug.Log("In 5 seconds, start level 1...");
         StartCoroutine(GameStart());
-        SceneManager.LoadScene("Level1");
     }
 
     IEnumerator GameStart()
     {
         yield return new WaitForSecondsRealtime(3f);
         Debug.Log("Starting level 1");
+        Destroy(GameObject.Find("Animation(Clone)"));
         SceneManager.LoadScene("Level1");
     }
     private async Task<string> SendJoinRequest()
