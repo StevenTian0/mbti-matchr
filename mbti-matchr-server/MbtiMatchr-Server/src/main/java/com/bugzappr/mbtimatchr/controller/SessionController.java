@@ -21,7 +21,7 @@ public class SessionController {
   private final ExecutorService matchers = Executors.newFixedThreadPool(6);
 
   private static final String SERVER_HOST = "192.168.137.1";
-  private static final Integer SERVER_PORT = 8080;
+  private static final Integer SERVER_PORT = 51234;
 
   private Integer current_gameroom_index = 0;
 
