@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,8 @@ public class GameController {
       new ConcurrentHashMap<Integer, ConcurrentLinkedDeque<GamePlayer>>();
 
   private final ExecutorService waitingForOther = Executors.newFixedThreadPool(6);
+
+  private final ReentrantLock lock = new ReentrantLock();
 
   @PostMapping("/ready")
   public DeferredResult<Integer> ready(@RequestParam Integer roomId) {
@@ -69,10 +72,20 @@ public class GameController {
       @RequestParam String data) {
     var room = rooms.get(roomId);
     if (pid == 1) {
-      room.getFirst().setData(data);
+      lock.lock();
+      try {
+        room.getFirst().setData(data);
+      } finally {
+        lock.unlock();
+      }
       return room.getLast().getData();
     } else {
-      room.getLast().setData(data);
+      lock.lock();
+      try {
+        room.getLast().setData(data);
+      } finally {
+        lock.unlock();
+      }
       return room.getFirst().getData();
     }
   }

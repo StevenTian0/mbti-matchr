@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +25,8 @@ public class SessionController {
 
   private Integer current_gameroom_index = 0;
 
+  private final ReentrantLock lock = new ReentrantLock();
+
   @PostMapping("/join")
   public DeferredResult<QueueResponse> join(@RequestParam String mbti) {
     DeferredResult<QueueResponse> output = new DeferredResult<>(10000L);
@@ -39,11 +42,20 @@ public class SessionController {
         if (queue.isEmpty()) {
           try {
             queue.add(player);
+            // accessing shared variable
+            lock.lock();
+            try {
+              player.setGameroomIndex(current_gameroom_index);
+              current_gameroom_index++;
+            } finally {
+              lock.unlock();
+            }
             player.wait();
             queue.remove(player);
             if (player.getMatch() != null) {
               output.setResult(new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
-                  player.getMatch().getUuid(), SERVER_HOST, SERVER_PORT, current_gameroom_index));
+                  player.getMatch().getUuid(), SERVER_HOST, SERVER_PORT,
+                  player.getGameroomIndex()));
             }
           } catch (Exception e) {
             System.out.println("1 " + e);
@@ -57,22 +69,31 @@ public class SessionController {
                 found = true;
                 p.setMatch(player);
                 player.setMatch(p);
+                player.setGameroomIndex(p.getGameroomIndex());
                 synchronized (p) {
                   p.notify();
                 }
                 queue.remove(player);
                 output.setResult(new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
-                    player.getMatch().getUuid(), SERVER_HOST, SERVER_PORT, current_gameroom_index));
-                current_gameroom_index++;
+                    player.getMatch().getUuid(), SERVER_HOST, SERVER_PORT,
+                    player.getGameroomIndex()));
               }
             }
             if (!found) {
               queue.add(player);
+              lock.lock();
+              try {
+                player.setGameroomIndex(current_gameroom_index);
+                current_gameroom_index++;
+              } finally {
+                lock.unlock();
+              }
               player.wait();
               queue.remove(player);
               if (player.getMatch() != null) {
                 output.setResult(new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
-                    player.getMatch().getUuid(), SERVER_HOST, SERVER_PORT, current_gameroom_index));
+                    player.getMatch().getUuid(), SERVER_HOST, SERVER_PORT,
+                    player.getGameroomIndex()));
               }
             }
           } catch (Exception e) {
