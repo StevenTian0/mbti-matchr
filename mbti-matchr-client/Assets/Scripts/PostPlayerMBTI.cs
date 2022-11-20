@@ -36,15 +36,18 @@ public class PostPlayerMBTI : MonoBehaviour
         int isReady = 0;
         while (isReady == 0)
         {
-            Debug.Log("Sending");
+            StartCoroutine(ExecuteAfterTime(0.1f));
             byte[] buf = System.Text.Encoding.UTF8.GetBytes(BZREADY + gsPid);
+
+            GSConnect();
             NetworkStream stream = gsClient.GetStream();
             stream.Write(buf, 0, buf.Length);
 
-            Debug.Log("Receiving");
             buf = new byte[32];
             string responseData = string.Empty;
             int bytes = stream.Read(buf, 0, buf.Length);
+            gsClient?.Close();
+
             responseData = System.Text.Encoding.UTF8.GetString(buf, 0, bytes);
             string[] response = responseData.Split(',');
             gsPid = response[0];
@@ -52,8 +55,13 @@ public class PostPlayerMBTI : MonoBehaviour
         }
     }
 
+    IEnumerator ExecuteAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+    }
+
     // Connect to TCP gameserver
-    private bool GSConnect()
+    public static bool GSConnect()
     {
         bool res = false;
         UnityEngine.Debug.Log($"Trying to connect to gameserver {gsHost}:{gsPort}");
@@ -95,7 +103,6 @@ public class PostPlayerMBTI : MonoBehaviour
         }
 
         UnityEngine.Debug.Log("Sending Ready Request");
-        GSConnect();
         GSReady();
 
         if (pid.Equals("-1"))
@@ -142,7 +149,11 @@ public class PostPlayerMBTI : MonoBehaviour
     // Clean up
     private void OnApplicationQuit()
     {
+        byte[] buf = System.Text.Encoding.UTF8.GetBytes(MAGIC);
+        GSConnect();
+        NetworkStream stream = gsClient.GetStream();
+        stream.Write(buf, 0, buf.Length);
         gsClient?.Close();
-        UnityEngine.Debug.Log("Closed gameserver connection");
+        UnityEngine.Debug.Log("Reset gameserver");
     }
 }

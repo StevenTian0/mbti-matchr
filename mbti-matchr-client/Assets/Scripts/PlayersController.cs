@@ -123,12 +123,16 @@ public class PlayersController : MonoBehaviour
         );
         string playerActionDtoJson = playerActionDto.SaveToString();
         byte[] buf = System.Text.Encoding.UTF8.GetBytes(PostPlayerMBTI.BZUPDATE + PostPlayerMBTI.gsPid + playerActionDtoJson);
+
+        PostPlayerMBTI.GSConnect();
         NetworkStream stream = PostPlayerMBTI.gsClient.GetStream();
         stream.Write(buf, 0, buf.Length);
 
         buf = new byte[1024];
         string responseData = string.Empty;
         int bytes = stream.Read(buf, 0, buf.Length);
+        PostPlayerMBTI.gsClient?.Close();
+
         responseData = System.Text.Encoding.UTF8.GetString(buf, 0, bytes);
 
         // TODO: take care of responseData = "{}"
