@@ -29,22 +29,25 @@ public class PostPlayerMBTI : MonoBehaviour
     {
         m_Text = dropdown.captionText.GetParsedText();
         SceneManager.LoadScene("WaitingRoom");
-        Debug.Log("Sending Join Request");
         try {
+            Debug.Log("Sending Join Request");
             string response = await SendJoinRequest();
             res = QueueResponseDto.CreateFromJSON(response);
-        } catch {
+            Debug.Log("Sending Ready Request");
+            pid = await SendReadyRequest();
+        } catch (Exception e) {
+            Debug.Log(e.Message);
             SceneManager.LoadScene("Menu");
             return;
         }
-        Debug.Log("Sending Ready Request");
-        pid = await SendReadyRequest();
+        Debug.Log("In 5 seconds, start level 1...");
         StartCoroutine(GameStart());
     }
 
     IEnumerator GameStart()
     {
         yield return new WaitForSecondsRealtime(3f);
+        Debug.Log("Starting level 1");
         SceneManager.LoadScene("Level1");
     }
     private async Task<string> SendJoinRequest()
@@ -66,7 +69,7 @@ public class PostPlayerMBTI : MonoBehaviour
             {"roomId", res.gameroom_index.ToString() }
         };
         var content = new FormUrlEncodedContent(values);
-        var response = await client.PostAsync(System.String.Format("http://{0}:{1}/game/ready", res.server_host, res.server_port), content);
+        var response = await client.PostAsync(System.String.Format("http://{0}:{1}/game/ready", res.server_host.ToString(), res.server_port.ToString()), content);
         var responseString = await response.Content.ReadAsStringAsync();
         return responseString;
     }

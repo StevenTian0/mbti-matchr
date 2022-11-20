@@ -22,6 +22,8 @@ public class GetOtherPlayerRequest : MonoBehaviour
         dataTransferListener = GameObject.Find("Data Transfer Listener");
         postPlayerMBTI = dataTransferListener.GetComponent<PostPlayerMBTI>();
 
+        Debug.Log("Local pid: " + postPlayerMBTI.pid);
+
         if (postPlayerMBTI.pid.Equals("1")) {
             thisPlayer = GameObject.FindGameObjectWithTag("Moose");
             otherPlayer = GameObject.FindGameObjectWithTag("Racoon");
@@ -29,6 +31,7 @@ public class GetOtherPlayerRequest : MonoBehaviour
             thisPlayer = GameObject.FindGameObjectWithTag("Racoon");
             otherPlayer = GameObject.FindGameObjectWithTag("Moose");
         }
+        Debug.Log("Deactivating the other player's controller...");
         otherPlayer.GetComponent<PlayerController>().enabled = false;
     }
 

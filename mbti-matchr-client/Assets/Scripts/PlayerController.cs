@@ -87,7 +87,6 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other) {
         if (other.gameObject.tag == "Moose" || other.gameObject.tag == "Racoon") {
             if (transform.position.y > other.gameObject.transform.position.y) {
-                Debug.Log("On top of Player!");
                 transform.position += new Vector3(0f,0f,1f);
             }
         }
@@ -96,7 +95,6 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionExit2D(Collision2D other) {
         if (other.gameObject.tag == "Moose" || other.gameObject.tag == "Racoon") {
             if (transform.position.y >  other.gameObject.transform.position.y) {
-                Debug.Log("No longer on top of Player!");
                 transform.position -= new Vector3(0f,0f,1f);
             }
         }
