@@ -103,7 +103,6 @@ public class SessionController {
         }
       }
     });
-    current_gameroom_index++;
     return output;
   }
 }
