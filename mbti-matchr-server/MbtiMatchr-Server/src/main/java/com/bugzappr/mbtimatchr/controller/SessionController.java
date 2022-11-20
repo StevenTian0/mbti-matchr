@@ -19,7 +19,7 @@ public class SessionController {
   private final ConcurrentLinkedDeque<QueuePlayer> queue = new ConcurrentLinkedDeque<QueuePlayer>();
   private final ExecutorService matchers = Executors.newFixedThreadPool(6);
 
-  private static final String SERVER_HOST = "127.0.0.1";
+  private static final String SERVER_HOST = "192.168.137.1";
   private static final Integer SERVER_PORT = 8080;
 
   private Integer current_gameroom_index = 0;
@@ -63,6 +63,7 @@ public class SessionController {
                 queue.remove(player);
                 output.setResult(new QueueResponse(player.getUuid(), player.getMatch().getMbti(),
                     player.getMatch().getUuid(), SERVER_HOST, SERVER_PORT, current_gameroom_index));
+                current_gameroom_index++;
               }
             }
             if (!found) {
