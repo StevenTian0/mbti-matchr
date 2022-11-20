@@ -7,14 +7,6 @@ import logging
 TCP_HOST = "0.0.0.0"
 TCP_PORT = 51234
 
-# ready stage
-player_1_ready = False
-player_2_ready = False
-
-# update stage
-client_1_data = bytearray()
-client_2_data = bytearray()
-
 
 class TCPHandler(socketserver.BaseRequestHandler):
     """
@@ -22,19 +14,43 @@ class TCPHandler(socketserver.BaseRequestHandler):
     """
 
     def handle(self):
+        global player_1_ready, player_2_ready, player_1_data, player_2_data
         logging.info(f"TCP client connected: {self.client_address[0]}")
         while True:
             data = self.request.recv(2048).strip()
-            if data == b"BUGZAPPR":
-                greeting = "Hello world"
-                message = bytearray(f"{greeting}", encoding="utf-8")
+            # ready
+            if data[0:7] == b"BZREADY" and len(data) == 8:
+                pid = int(bytearray(data[7:8]).decode("utf-8"))
+                ready = 0
+                # first player call
+                if pid == 0:
+                    if not player_1_ready:
+                        player_1_ready = True
+                        pid = 1
+                        logging.info(f"TCP client {self.client_address[0]} is assigned to P1")
+                    elif not player_2_ready:
+                        player_2_ready = True
+                        pid = 2
+                        ready = 1
+                        logging.info(f"TCP client {self.client_address[0]} is assigned to P2")
+                else:
+                    if player_1_ready and player_2_ready:
+                        ready = 1
+                message = bytearray(f"{pid},{ready}", encoding="utf-8")
+                self.request.sendall(message)
+            elif data[0:8] == b"BZUPDATE" and len(data) > 9:
+                pid = int(bytearray(data[8:9]).decode("utf-8"))
+                message = bytearray()
+                if pid == 1:
+                    player_1_data = bytearray(data[9:])
+                    message = player_2_data
+                elif pid == 2:
+                    player_2_data = bytearray(data[9:])
+                    message = player_1_data
                 self.request.sendall(message)
             else:  # b''
                 logging.info(f"TCP client disconnected: {self.client_address[0]}")
                 break
-
-    def player_ready(self, room_id: int):
-        pass
 
 
 if __name__ == "__main__":
@@ -45,6 +61,11 @@ if __name__ == "__main__":
     stdout_handler = logging.StreamHandler(sys.stdout)
     stdout_handler.setFormatter(formatter)
     logger.addHandler(stdout_handler)
+    # constants
+    player_1_ready = False
+    player_2_ready = False
+    player_1_data = bytearray()
+    player_2_data = bytearray()
     # start server
     with socketserver.TCPServer((TCP_HOST, TCP_PORT), TCPHandler) as server:
         logging.info("Started TCP server")
