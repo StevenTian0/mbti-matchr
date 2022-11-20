@@ -93,19 +93,16 @@ public class PlayersController : MonoBehaviour
     public void Update()
     {
         Debug.Log("Updating ...... ");
-        if (GameIsStarted)
-        {
-            thisdirX = Input.GetAxisRaw("Horizontal");
-            thisrb.velocity = new Vector2(thisdirX * moveSpeed, thisrb.velocity.y);
+        thisdirX = Input.GetAxisRaw("Horizontal");
+        thisrb.velocity = new Vector2(thisdirX * moveSpeed, thisrb.velocity.y);
 
-            if (Input.GetButtonDown("Jump") && IsGrounded())
-            {
-                thisrb.velocity = new Vector2(thisrb.velocity.x, jumpForce);
-            }
-            getOtherPlayerMovementInfo();
-            UpdatethisAnimationState();
-            UpdateOtherAnimationState();
-        }                
+        if (Input.GetButtonDown("Jump") && IsGrounded())
+        {
+            thisrb.velocity = new Vector2(thisrb.velocity.x, jumpForce);
+        }
+        getOtherPlayerMovementInfo();
+        UpdatethisAnimationState();
+        UpdateOtherAnimationState();                     
     }
 
     private async void getOtherPlayerMovementInfo()
