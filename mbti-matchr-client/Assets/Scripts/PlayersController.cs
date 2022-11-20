@@ -66,6 +66,7 @@ public class PlayersController : MonoBehaviour
     private void Awake()
     {
         winScreen.SetActive(false);
+        Destroy(GameObject.Find("Audio Source"));
         Destroy(GameObject.Find("Animation"));
         dataTransferListener = GameObject.Find("Data Transfer Listener");
         postPlayerMBTI = dataTransferListener.GetComponent<PostPlayerMBTI>();

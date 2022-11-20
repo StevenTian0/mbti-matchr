@@ -81,6 +81,7 @@ public class PostPlayerMBTI : MonoBehaviour
     {
         DontDestroyOnLoad(this.gameObject);
         DontDestroyOnLoad(GameObject.Find("Animation"));
+        DontDestroyOnLoad(GameObject.Find("Audio Source"));
     }
 
     public async void OnMatchClick()
