@@ -92,7 +92,12 @@ public class PlayersController : MonoBehaviour
 
     public void Update()
     {
-        //Debug.Log("Updating ...... ");
+        if (Input.GetButtonDown("Mouse X"))
+        {
+            Debug.Log("q is pressed");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        
         thisdirX = Input.GetAxisRaw("Horizontal");
         thisrb.velocity = new Vector2(thisdirX * moveSpeed, thisrb.velocity.y);
 
@@ -166,11 +171,11 @@ public class PlayersController : MonoBehaviour
             otherState = MovementState.idle;
         }
 
-        if (thisrb.velocity.y > .1f)
+        if (otherrb.velocity.y > .1f)
         {
             otherState = MovementState.jumping;
         }
-        else if (thisrb.velocity.y < -.1f)
+        else if (otherrb.velocity.y < -.1f)
         {
             otherState = MovementState.falling;
         }
