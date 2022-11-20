@@ -7,11 +7,21 @@ public class QueuePlayer {
   private String mbti;
   private UUID uuid;
   private QueuePlayer match;
+  private int gameroomIndex;
 
   public QueuePlayer(String mbti, UUID uuid) {
     this.mbti = mbti;
     this.uuid = uuid;
     this.match = null;
+    this.gameroomIndex = -1;
+  }
+
+  public int getGameroomIndex() {
+    return gameroomIndex;
+  }
+
+  public void setGameroomIndex(int gameroomIndex) {
+    this.gameroomIndex = gameroomIndex;
   }
 
   public String getMbti() {
