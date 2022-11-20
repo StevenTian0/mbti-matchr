@@ -46,6 +46,9 @@ public class PlayersController : MonoBehaviour
     public float thisInitX;
     public float thisInitY;
     public float thisInitZ;
+    public float otherInitX;
+    public float otherInitY;
+    public float otherInitZ;
 
     /// <summary>
     /// //////////////////////////////////////////////////////////////////////////
@@ -97,6 +100,9 @@ public class PlayersController : MonoBehaviour
         thisInitX = thisPlayer.transform.position.x;
         thisInitY = thisPlayer.transform.position.y;
         thisInitZ = thisPlayer.transform.position.z;
+        otherInitX = otherPlayer.transform.position.x;
+        otherInitY = otherPlayer.transform.position.y;
+        otherInitZ = otherPlayer.transform.position.z;
     }
 
     public void Update()
@@ -163,7 +169,7 @@ public class PlayersController : MonoBehaviour
         // take care of responseData = "{}"
         if (responseData.Equals("{}"))
         {
-            return;
+            otherPlayer.transform.position = new Vector3(otherInitX, otherInitY, otherInitZ);
         }
 
         playerActionDtoReponse = PlayerActionDto.CreateFromJSON(responseData);
