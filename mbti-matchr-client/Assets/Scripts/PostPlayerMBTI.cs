@@ -12,7 +12,6 @@ using System.Net.Sockets;
 
 public class PostPlayerMBTI : MonoBehaviour
 {
-    public GameObject animation;
     public TMP_InputField inputField;
     private string m_Text;
     public QueueResponseDto res;
