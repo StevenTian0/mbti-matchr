@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Net.Sockets;
 
 public class PlayersController : MonoBehaviour
 {
@@ -105,9 +106,44 @@ public class PlayersController : MonoBehaviour
         {
             thisrb.velocity = new Vector2(thisrb.velocity.x, jumpForce);
         }
-        getOtherPlayerMovementInfo();
+        GSUpdate();
         UpdatethisAnimationState();
         UpdateOtherAnimationState();                     
+    }
+
+    private void GSUpdate()
+    {
+        PlayerActionDto playerActionDto = new PlayerActionDto
+        (
+            thisPlayer.transform.position.x,
+            thisPlayer.transform.position.y,
+            thisPlayer.transform.position.z,
+            (int)thisState,
+            reset
+        );
+        string playerActionDtoJson = playerActionDto.SaveToString();
+        byte[] buf = System.Text.Encoding.UTF8.GetBytes(PostPlayerMBTI.BZUPDATE + PostPlayerMBTI.gsPid + playerActionDtoJson);
+        NetworkStream stream = PostPlayerMBTI.gsClient.GetStream();
+        stream.Write(buf, 0, buf.Length);
+
+        buf = new byte[1024];
+        string responseData = string.Empty;
+        int bytes = stream.Read(buf, 0, buf.Length);
+        responseData = System.Text.Encoding.UTF8.GetString(buf, 0, bytes);
+
+        // TODO: take care of responseData = "{}"
+        playerActionDtoReponse = PlayerActionDto.CreateFromJSON(responseData);
+
+        if (playerActionDtoReponse.reset == 1)
+        {
+            Debug.Log("ctrl is pressed");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        otherPlayer.transform.position = new Vector3(playerActionDtoReponse.positionX, playerActionDtoReponse.positionY,
+            playerActionDtoReponse.positionZ);
+
+        otherState = (MovementState)playerActionDtoReponse.state;
     }
 
     private async void getOtherPlayerMovementInfo()
