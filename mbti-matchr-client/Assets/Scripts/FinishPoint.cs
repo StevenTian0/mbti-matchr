@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class FinishPoint : MonoBehaviour
 {
-    // void OnCollisionEnter(Collision other)
-    // {
-    //     if (other.gameObject.tag == "Player") {
-    //         Debug.Log("You have arrived!");
-    //     }
-    // }
+    public int arrived = 0;
 
-       void OnTriggerEnter2D(Collider2D other){  // The player enters a trigger collider (trap or spikes)
+    void OnTriggerEnter2D(Collider2D other){  // The player enters a trigger collider (trap or spikes)
         if (other.gameObject.tag == "Moose" || other.gameObject.tag == "Racoon")
         {
-            Debug.Log("Finish line!");
+            arrived++;
+        }
+    }
+    void OnTriggerExit2D(Collider2D other) {
+        if (other.gameObject.tag == "Moose" || other.gameObject.tag == "Racoon")
+        {
+            arrived--;
         }
     }
 }

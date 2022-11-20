@@ -80,9 +80,8 @@ public class PostPlayerMBTI : MonoBehaviour
 
     public void Awake()
     {
-        Instantiate(animation, new Vector3(0, 0, 0), Quaternion.identity);
         DontDestroyOnLoad(this.gameObject);
-        DontDestroyOnLoad(GameObject.Find("Animation(Clone)"));
+        DontDestroyOnLoad(GameObject.Find("Animation"));
     }
 
     public async void OnMatchClick()
@@ -125,7 +124,6 @@ public class PostPlayerMBTI : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(3f);
         Debug.Log("Starting level 1");
-        Destroy(GameObject.Find("Animation(Clone)"));
         SceneManager.LoadScene("Level1");
     }
     private async Task<string> SendJoinRequest()

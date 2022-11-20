@@ -108,10 +108,10 @@ TextureImporter:
       name: InputField_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 1460
-        width: 704
-        height: 292
+        x: 21
+        y: 1508
+        width: 640
+        height: 192
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,9 +130,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 1168
-        width: 704
-        height: 292
+        y: 1265
+        width: 649
+        height: 178
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,10 +150,10 @@ TextureImporter:
       name: InputField_2
       rect:
         serializedVersion: 2
-        x: 0
-        y: 876
-        width: 704
-        height: 292
+        x: 57
+        y: 940
+        width: 640
+        height: 192
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,10 +171,10 @@ TextureImporter:
       name: InputField_3
       rect:
         serializedVersion: 2
-        x: 0
-        y: 584
-        width: 704
-        height: 292
+        x: 17
+        y: 658
+        width: 640
+        height: 192
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,10 +192,10 @@ TextureImporter:
       name: InputField_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 292
-        width: 704
-        height: 292
+        x: 42
+        y: 348
+        width: 640
+        height: 192
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,10 +213,10 @@ TextureImporter:
       name: InputField_5
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 704
-        height: 292
+        x: 12
+        y: 18
+        width: 640
+        height: 192
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
