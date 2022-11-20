@@ -1,8 +1,7 @@
+import logging
 import socketserver
 import sys
-import math
-import time
-import logging
+import threading
 
 TCP_HOST = "0.0.0.0"
 TCP_PORT = 51234
@@ -15,7 +14,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         global player_1_ready, player_2_ready, player_1_data, player_2_data
-        logging.info(f"TCP client connected: {self.client_address[0]}")
+        logging.debug(f"TCP client connected: {self.client_address[0]}")
         while True:
             data = self.request.recv(2048).strip()
             # ready
@@ -40,29 +39,37 @@ class TCPHandler(socketserver.BaseRequestHandler):
                 self.request.sendall(message)
             elif data[0:8] == b"BZUPDATE" and len(data) > 9:
                 pid = int(bytearray(data[8:9]).decode("utf-8"))
-                logging.info(f"P{pid} requested update")
+                logging.debug(f"P{pid} requested update")
                 message = bytearray(b"{}")
                 if pid == 1:
-                    logging.info(f"Updating P{pid} data")
+                    logging.debug(f"Updating P{pid} data")
                     player_1_data = bytearray(data[9:])
-                    logging.info(f"Setting P{pid} message")
+                    logging.debug(f"Setting P{pid} message")
                     message = player_2_data
                 elif pid == 2:
-                    logging.info(f"Updating P{pid} data")
+                    logging.debug(f"Updating P{pid} data")
                     player_2_data = bytearray(data[9:])
-                    logging.info(f"Setting P{pid} message")
+                    logging.debug(f"Setting P{pid} message")
                     message = player_1_data
-                logging.info(f"Sending message to P{pid}")
+                logging.debug(f"Sending message to P{pid}")
+                self.request.sendall(message)
+            elif data == b"MAGIC":
+                player_1_ready = False
+                player_2_ready = False
+                player_1_data = bytearray(b"{}")
+                player_2_data = bytearray(b"{}")
+                message = bytearray("Cleared server constants", encoding="utf-8")
+                logging.info("Cleared server constants")
                 self.request.sendall(message)
             else:  # b''
-                logging.info(f"TCP client disconnected: {self.client_address[0]}")
+                logging.debug(f"TCP client disconnected: {self.client_address[0]}")
                 break
 
 
 if __name__ == "__main__":
     # set up log to console
     logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter("[%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S")
     stdout_handler = logging.StreamHandler(sys.stdout)
     stdout_handler.setFormatter(formatter)
