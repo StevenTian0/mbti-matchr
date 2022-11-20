@@ -40,13 +40,19 @@ class TCPHandler(socketserver.BaseRequestHandler):
                 self.request.sendall(message)
             elif data[0:8] == b"BZUPDATE" and len(data) > 9:
                 pid = int(bytearray(data[8:9]).decode("utf-8"))
-                message = bytearray()
+                logging.info(f"P{pid} requested update")
+                message = bytearray(b"{}")
                 if pid == 1:
+                    logging.info(f"Updating P{pid} data")
                     player_1_data = bytearray(data[9:])
+                    logging.info(f"Setting P{pid} message")
                     message = player_2_data
                 elif pid == 2:
+                    logging.info(f"Updating P{pid} data")
                     player_2_data = bytearray(data[9:])
+                    logging.info(f"Setting P{pid} message")
                     message = player_1_data
+                logging.info(f"Sending message to P{pid}")
                 self.request.sendall(message)
             else:  # b''
                 logging.info(f"TCP client disconnected: {self.client_address[0]}")
@@ -64,8 +70,8 @@ if __name__ == "__main__":
     # constants
     player_1_ready = False
     player_2_ready = False
-    player_1_data = bytearray()
-    player_2_data = bytearray()
+    player_1_data = bytearray(b"{}")
+    player_2_data = bytearray(b"{}")
     # start server
     with socketserver.TCPServer((TCP_HOST, TCP_PORT), TCPHandler) as server:
         logging.info("Started TCP server")
