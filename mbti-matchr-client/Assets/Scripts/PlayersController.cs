@@ -92,7 +92,7 @@ public class PlayersController : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetButtonDown("Mouse X"))
+        if (Input.GetButtonDown("Fire1"))
         {
             Debug.Log("q is pressed");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
