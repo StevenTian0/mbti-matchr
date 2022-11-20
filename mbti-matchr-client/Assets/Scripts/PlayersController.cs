@@ -38,6 +38,7 @@ public class PlayersController : MonoBehaviour
     public float otherpositionZ;
 
     [SerializeField] private LayerMask jumpableGround;
+    [SerializeField] private GameObject winScreen;
 
     private float thisdirX = 0f;
     private float otherdirX = 0f;
@@ -64,7 +65,7 @@ public class PlayersController : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        GameObject.Find("Winning Screen").SetActive(false);
+        winScreen.SetActive(false);
         Destroy(GameObject.Find("Animation"));
         dataTransferListener = GameObject.Find("Data Transfer Listener");
         postPlayerMBTI = dataTransferListener.GetComponent<PostPlayerMBTI>();
@@ -284,6 +285,6 @@ public class PlayersController : MonoBehaviour
     }
 
     private void Win() {
-        GameObject.Find("Winning Screen").SetActive(true);
+        winScreen.SetActive(true);
     }
 }

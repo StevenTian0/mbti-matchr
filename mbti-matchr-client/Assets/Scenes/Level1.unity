@@ -383,14 +383,6 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7943996421765331373, guid: 5e3cb0d00e25542898fa98870f321a84, type: 3}
-      propertyPath: m_LocalScale.x
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7943996421765331373, guid: 5e3cb0d00e25542898fa98870f321a84, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7943996421765331373, guid: 5e3cb0d00e25542898fa98870f321a84, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5
       objectReference: {fileID: 0}
@@ -4126,6 +4118,7 @@ MonoBehaviour:
   jumpableGround:
     serializedVersion: 2
     m_Bits: 2147483647
+  winScreen: {fileID: 1629184800}
   moveSpeed: 5
   jumpForce: 17
   thisInitX: 0
