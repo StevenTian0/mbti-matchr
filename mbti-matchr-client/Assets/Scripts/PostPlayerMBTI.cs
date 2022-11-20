@@ -81,6 +81,7 @@ public class PostPlayerMBTI : MonoBehaviour
     {
         DontDestroyOnLoad(this.gameObject);
         DontDestroyOnLoad(GameObject.Find("Animation"));
+        DontDestroyOnLoad(GameObject.Find("Audio Source"));
     }
 
     public async void OnMatchClick()
@@ -96,23 +97,39 @@ public class PostPlayerMBTI : MonoBehaviour
             UnityEngine.Debug.Log("Sending Join Request");
             string response = await SendJoinRequest();
             res = QueueResponseDto.CreateFromJSON(response);
+            Debug.Log(res.matched_uuid);
+            Debug.Log(res.server_port);
+            if (res.server_port == 0) {
+                SceneManager.LoadScene("MachrMenu");
+                Destroy(this.gameObject);
+                Destroy(GameObject.Find("Animation"));
+                Destroy(GameObject.Find("Audio Source"));
+                return;
+            }
             UnityEngine.Debug.Log("Room id: " + res.gameroom_index);
             // set gsHost and gsPort
             gsHost = res.server_host;
             gsPort = res.server_port;
         } catch (Exception e) {
             UnityEngine.Debug.Log(e.Message);
-            SceneManager.LoadScene("Menu");
+            SceneManager.LoadScene("MachrMenu");
+            Destroy(this.gameObject);
+            Destroy(GameObject.Find("Animation"));
+            Destroy(GameObject.Find("Audio Source"));
             return;
         }
 
         UnityEngine.Debug.Log("Sending Ready Request");
         GSReady();
 
+
         if (pid.Equals("-1"))
         {
             UnityEngine.Debug.Log("Invalid pid. Returning to menu...");
-            SceneManager.LoadScene("Menu");
+            SceneManager.LoadScene("MachrMenu");
+            Destroy(this.gameObject);
+            Destroy(GameObject.Find("Animation"));
+            Destroy(GameObject.Find("Audio Source"));
             return;
         }
         UnityEngine.Debug.Log("In 3 seconds, start level 1...");
