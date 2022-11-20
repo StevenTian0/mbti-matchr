@@ -29,7 +29,6 @@ public class PostPlayerMBTI : MonoBehaviour
     {
         m_Text = dropdown.captionText.GetParsedText();
         SceneManager.LoadScene("WaitingRoom");
-        /*
         Debug.Log("Sending Join Request");
         try {
             string response = await SendJoinRequest();
@@ -40,7 +39,6 @@ public class PostPlayerMBTI : MonoBehaviour
         }
         Debug.Log("Sending Ready Request");
         pid = await SendReadyRequest();
-        */
         StartCoroutine(GameStart());
     }
 

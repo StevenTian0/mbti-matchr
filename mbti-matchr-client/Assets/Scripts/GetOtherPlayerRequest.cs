@@ -9,14 +9,27 @@ using UnityEngine.Networking;
 
 public class GetOtherPlayerRequest : MonoBehaviour
 {
+    GameObject thisPlayer;
     GameObject otherPlayer;
+    GameObject dataTransferListener;
     PlayerController playerController;
     PostPlayerMBTI postPlayerMBTI;
     public static readonly HttpClient client = new HttpClient();
     PlayerActionDto playerActionDtoReponse;
 
-    private void Start()
+    private void Awake()
     {
+        dataTransferListener = GameObject.Find("Data Transfer Listener");
+        postPlayerMBTI = dataTransferListener.GetComponent<PostPlayerMBTI>();
+
+        if (postPlayerMBTI.pid.Equals("1")) {
+            thisPlayer = GameObject.FindGameObjectWithTag("Moose");
+            otherPlayer = GameObject.FindGameObjectWithTag("Racoon");
+        } else {
+            thisPlayer = GameObject.FindGameObjectWithTag("Racoon");
+            otherPlayer = GameObject.FindGameObjectWithTag("Moose");
+        }
+        otherPlayer.GetComponent<PlayerController>().enabled = false;
     }
 
     public async void FixedUpdate()
