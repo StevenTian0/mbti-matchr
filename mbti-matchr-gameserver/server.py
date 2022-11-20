@@ -7,6 +7,11 @@ import logging
 TCP_HOST = "0.0.0.0"
 TCP_PORT = 51234
 
+# ready stage
+player_1_ready = False
+player_2_ready = False
+
+# update stage
 client_1_data = bytearray()
 client_2_data = bytearray()
 
@@ -19,7 +24,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         logging.info(f"TCP client connected: {self.client_address[0]}")
         while True:
-            data = self.request.recv(1024).strip()
+            data = self.request.recv(2048).strip()
             if data == b"BUGZAPPR":
                 greeting = "Hello world"
                 message = bytearray(f"{greeting}", encoding="utf-8")
@@ -27,6 +32,9 @@ class TCPHandler(socketserver.BaseRequestHandler):
             else:  # b''
                 logging.info(f"TCP client disconnected: {self.client_address[0]}")
                 break
+
+    def player_ready(self, room_id: int):
+        pass
 
 
 if __name__ == "__main__":
