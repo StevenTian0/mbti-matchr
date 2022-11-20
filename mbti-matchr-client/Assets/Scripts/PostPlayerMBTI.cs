@@ -33,10 +33,17 @@ public class PostPlayerMBTI : MonoBehaviour
             Debug.Log("Sending Join Request");
             string response = await SendJoinRequest();
             res = QueueResponseDto.CreateFromJSON(response);
+            Debug.Log("Room id: " + res.gameroom_index);
             Debug.Log("Sending Ready Request");
             pid = await SendReadyRequest();
         } catch (Exception e) {
             Debug.Log(e.Message);
+            SceneManager.LoadScene("Menu");
+            return;
+        }
+        if (pid.Equals("-1"))
+        {
+            Debug.Log("Invalid pid. Returning to menu...");
             SceneManager.LoadScene("Menu");
             return;
         }

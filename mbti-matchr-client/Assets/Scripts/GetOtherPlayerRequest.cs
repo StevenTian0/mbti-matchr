@@ -22,6 +22,7 @@ public class GetOtherPlayerRequest : MonoBehaviour
         dataTransferListener = GameObject.Find("Data Transfer Listener");
         postPlayerMBTI = dataTransferListener.GetComponent<PostPlayerMBTI>();
 
+        Debug.Log("Room id: " + postPlayerMBTI.res.gameroom_index);
         Debug.Log("Local pid: " + postPlayerMBTI.pid);
 
         if (postPlayerMBTI.pid.Equals("1")) {
@@ -39,6 +40,8 @@ public class GetOtherPlayerRequest : MonoBehaviour
     {
         string playerActionJsonResponse = await SendPlayerActionRequest();
         playerActionDtoReponse = PlayerActionDto.CreateFromJSON(playerActionJsonResponse);
+        Debug.Log(playerActionDtoReponse.positionX); 
+        Debug.Log(playerActionDtoReponse.positionY);
         otherPlayer.transform.position = new Vector3(playerActionDtoReponse.positionX, playerActionDtoReponse.positionY,
             playerActionDtoReponse.positionZ);
     }
