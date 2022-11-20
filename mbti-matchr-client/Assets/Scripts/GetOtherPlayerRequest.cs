@@ -36,7 +36,7 @@ public class GetOtherPlayerRequest : MonoBehaviour
         otherPlayer.GetComponent<PlayerController>().enabled = false;
     }
 
-    public async void FixedUpdate()
+    public async void Update()
     {
         Debug.Log("Updating .....");
         string playerActionJsonResponse = await SendPlayerActionRequest();
@@ -47,6 +47,7 @@ public class GetOtherPlayerRequest : MonoBehaviour
         otherPlayer.transform.position = new Vector3(playerActionDtoReponse.positionX, playerActionDtoReponse.positionY,
             playerActionDtoReponse.positionZ);
     }
+
 
     private async Task<string> SendPlayerActionRequest()
     {
