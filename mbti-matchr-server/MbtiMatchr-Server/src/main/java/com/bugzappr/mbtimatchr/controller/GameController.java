@@ -39,9 +39,9 @@ public class GameController {
             newRoom.add(player);
             rooms.put(roomId, newRoom);
             player.wait();
-            // player 0 has been notified
+            // player 1 has been notified
             if (newRoom.size() == 2) {
-              output.setResult(0);
+              output.setResult(1);
             }
           } catch (Exception e) {
             System.out.println("GameController 1" + e);
@@ -54,7 +54,7 @@ public class GameController {
             synchronized (firstPlayer) {
               firstPlayer.notify();
             }
-            output.setResult(1);
+            output.setResult(2);
           } catch (Exception e) {
             System.out.println("GameController 2" + e);
           }
@@ -68,7 +68,7 @@ public class GameController {
   public String playerUpdate(@RequestParam Integer roomId, @RequestParam Integer pid,
       @RequestParam String data) {
     var room = rooms.get(roomId);
-    if (pid == 0) {
+    if (pid == 1) {
       room.getFirst().setData(data);
       return room.getLast().getData();
     } else {
