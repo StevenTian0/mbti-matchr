@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System;
 using System.Net.Sockets;
-using System.Diagnostics;
 
 public class PostPlayerMBTI : MonoBehaviour
 {
@@ -34,28 +33,23 @@ public class PostPlayerMBTI : MonoBehaviour
     // Get data from gameserver
     private void GSReady()
     {
-        Stopwatch s = new Stopwatch();
-        while (s.Elapsed < TimeSpan.FromSeconds(10))
+        int isReady = 0;
+        while (isReady == 0)
         {
+            Debug.Log("Sending");
             byte[] buf = System.Text.Encoding.UTF8.GetBytes(BZREADY + gsPid);
             NetworkStream stream = gsClient.GetStream();
             stream.Write(buf, 0, buf.Length);
 
+            Debug.Log("Receiving");
             buf = new byte[32];
             string responseData = string.Empty;
             int bytes = stream.Read(buf, 0, buf.Length);
             responseData = System.Text.Encoding.UTF8.GetString(buf, 0, bytes);
             string[] response = responseData.Split(',');
             gsPid = response[0];
-            int isReady = int.Parse(response[1]);
-            if (isReady == 1)
-            {
-                s.Stop();
-                return;
-            }
+            isReady = int.Parse(response[1]);
         }
-        s.Stop();
-        pid = "-1";
     }
 
     // Connect to TCP gameserver
