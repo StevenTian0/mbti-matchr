@@ -112,13 +112,18 @@ public class PlayersController : MonoBehaviour
 
     public void Update()
     {
-        if (finishPoint.arrived == 2) won = 1;
+        if (finishPoint.arrived == 2)
+        {
+            won = 1;
+            GSUpdate(0, 1);
+            if (!winScreen.activeSelf) winScreen.SetActive(true);
+        }
         if (won != 1) 
         {
             if (Input.GetButtonDown("Fire1"))
             {
                 Debug.Log("ctrl is pressed");
-                GSUpdate(1);
+                GSUpdate(1, 0);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
 
@@ -130,12 +135,12 @@ public class PlayersController : MonoBehaviour
                 thisrb.velocity = new Vector2(thisrb.velocity.x, jumpForce);
             }
 
-            GSUpdate(0);
+            GSUpdate(0, 0);
             UpdatethisAnimationState();
             UpdateOtherAnimationState();
         }
     }
-    private void GSUpdate(int reset)
+    private void GSUpdate(int reset, int win)
     {
         PlayerActionDto playerActionDto;
         if (reset == 1)
