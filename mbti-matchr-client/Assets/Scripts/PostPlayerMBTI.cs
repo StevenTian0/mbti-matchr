@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System;
 
 public class PostPlayerMBTI : MonoBehaviour
 {
@@ -19,20 +20,35 @@ public class PostPlayerMBTI : MonoBehaviour
 
     private static readonly HttpClient client = new HttpClient();
 
-    private void Start()
+    public void Awake()
     {
-        //SceneManager.UnloadScene("WaitingRoom");
-        //SceneManager.UnloadScene("InitialLevel");
+        DontDestroyOnLoad(this.gameObject);
     }
+
     public async void OnMatchClick()
     {
         m_Text = dropdown.captionText.GetParsedText();
         SceneManager.LoadScene("WaitingRoom");
-        string response = await SendJoinRequest();
-        res = QueueResponseDto.CreateFromJSON(response);
+        /*
+        Debug.Log("Sending Join Request");
+        try {
+            string response = await SendJoinRequest();
+            res = QueueResponseDto.CreateFromJSON(response);
+        } catch {
+            SceneManager.LoadScene("Menu");
+            return;
+        }
+        Debug.Log("Sending Ready Request");
         pid = await SendReadyRequest();
+        */
+        StartCoroutine(GameStart());
     }
 
+    IEnumerator GameStart()
+    {
+        yield return new WaitForSecondsRealtime(3f);
+        SceneManager.LoadScene("Level1");
+    }
     private async Task<string> SendJoinRequest()
     {
         var values = new Dictionary<string, string>

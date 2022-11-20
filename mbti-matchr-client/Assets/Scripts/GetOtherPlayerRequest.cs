@@ -9,16 +9,21 @@ using UnityEngine.Networking;
 
 public class GetOtherPlayerRequest : MonoBehaviour
 {
-    GameObject player2 = GameObject.FindGameObjectsWithTag("Racoon")[0];
+    GameObject otherPlayer;
     PlayerController playerController;
     PostPlayerMBTI postPlayerMBTI;
     public static readonly HttpClient client = new HttpClient();
     PlayerActionDto playerActionDtoReponse;
+
+    private void Start()
+    {
+    }
+
     public async void FixedUpdate()
     {
         string playerActionJsonResponse = await SendPlayerActionRequest();
         playerActionDtoReponse = PlayerActionDto.CreateFromJSON(playerActionJsonResponse);
-        player2.transform.position = new Vector3(playerActionDtoReponse.positionX, playerActionDtoReponse.positionY,
+        otherPlayer.transform.position = new Vector3(playerActionDtoReponse.positionX, playerActionDtoReponse.positionY,
             playerActionDtoReponse.positionZ);
     }
 

@@ -207,7 +207,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 701426513}
+      - m_Target: {fileID: 708187256}
         m_TargetAssemblyTypeName: PostPlayerMBTI, Assembly-CSharp
         m_MethodName: OnMatchClick
         m_Mode: 1
@@ -428,7 +428,6 @@ GameObject:
   - component: {fileID: 701426512}
   - component: {fileID: 701426511}
   - component: {fileID: 701426510}
-  - component: {fileID: 701426513}
   m_Layer: 5
   m_Name: Dropdown
   m_TagString: Untagged
@@ -585,19 +584,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 701426508}
   m_CullTransparentMesh: 1
---- !u!114 &701426513
+--- !u!1 &708187255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 708187257}
+  - component: {fileID: 708187256}
+  m_Layer: 0
+  m_Name: Data Transfer Listener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &708187256
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 701426508}
+  m_GameObject: {fileID: 708187255}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 278cb64cd5ad51c4f904be8c23f0cef3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dropdown: {fileID: 701426510}
+  res:
+    uuid: 
+    matched_mbti: 
+    matched_uuid: 
+    server_host: 
+    server_port: 0
+    gameroom_index: 0
+  pid: 
+--- !u!4 &708187257
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708187255}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 485.75, y: 250.25, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &895615720
 GameObject:
   m_ObjectHideFlags: 0
