@@ -6,18 +6,23 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System;
+using UnityEngine.UI;
+using TMPro;
 
 public class PostPlayerMBTI : MonoBehaviour
 {
-    public TMPro.TMP_Dropdown dropdown;
+    public TMP_InputField inputField;
     private string m_Text;
     public QueueResponseDto res;
-
     public string pid;
 
     private string host = "192.168.137.1";
     private string port = "8080";
-
+    private List<string> valdiInput = new List<string>()
+    {
+       "INTJ", "INTP", "ENTJ", "ENTP","INFJ", "INFP", "ENFJ", "ENFP","ISTJ", "ISFJ", "ESTJ", "ESFJ","ISTP", "ISFP", "ESTP", "ESFP",
+       "intj","intp","entj","entp","infj","infp","enfj", "enfp","istj","isfj","estj","esfj","istp","isfp","estp","esfp"
+    };
     private static readonly HttpClient client = new HttpClient();
 
     public void Awake()
@@ -27,8 +32,12 @@ public class PostPlayerMBTI : MonoBehaviour
 
     public async void OnMatchClick()
     {
-        
-        m_Text = dropdown.captionText.GetParsedText();
+        m_Text = inputField.text;
+        if(!valdiInput.Contains(m_Text) || m_Text.Length != 4)
+        {
+            inputField.text = "";
+            return;
+        }
         SceneManager.LoadScene("WaitingRoom");
         try {
             Debug.Log("Sending Join Request");
